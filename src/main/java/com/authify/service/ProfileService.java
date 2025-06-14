@@ -1,0 +1,10 @@
+package com.authify.service;
+
+import com.authify.io.ProfileRequest;
+import com.authify.io.ProfileResponse;
+
+public interface ProfileService {
+
+    public ProfileResponse createProfile(ProfileRequest request);
+}
+
