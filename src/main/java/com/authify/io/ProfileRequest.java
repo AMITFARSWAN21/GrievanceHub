@@ -1,25 +1,27 @@
 package com.authify.io;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @Builder
 public class ProfileRequest {
     @NotBlank(message = "Name should not be empty")
     private String name;
 
-    @Email(message = "Enter valid email adress")
-    @NotNull(message = "Name should not be empty")
+    @Email(message = "Enter valid email address")
+    @NotNull(message = "Email should not be empty")
     private String email;
 
-    @Min(value = 6,message = "Password must be alteast of 6 characters")
+    @NotBlank(message = "Password should not be empty")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 }
