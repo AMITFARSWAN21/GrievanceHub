@@ -3,6 +3,7 @@ package com.authify.controller;
 import com.authify.io.AuthRequest;
 import com.authify.io.AuthResponse;
 import com.authify.service.AppUserDetailsService;
+import com.authify.service.ProfileService;
 import com.authify.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -13,11 +14,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -32,6 +31,7 @@ public class AuthController {
     private final AppUserDetailsService appUserDetailsService;
 
     private final JwtUtil jwtUtil;
+    private final ProfileService profileService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request)
@@ -81,6 +81,25 @@ public class AuthController {
 
     private void authenticate(String email, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email,password));
+    }
+
+
+    @GetMapping("/is-authenticated")
+    public ResponseEntity<Boolean> isAuthenticated(
+            @CurrentSecurityContext(expression = "authentication?.name") String email
+    ) {
+        return ResponseEntity.ok(email != null);
+    }
+
+    @PostMapping("/send-resend-otp")
+    public ResponseEntity<?> sendResendOtp(@RequestParam String email) {
+        try {
+            profileService.sendResendOtp(email);
+            return ResponseEntity.ok().body("OTP sent successfully");
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to send OTP: " + ex.getMessage());
+        }
     }
 
 }
