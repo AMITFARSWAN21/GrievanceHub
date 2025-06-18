@@ -33,4 +33,15 @@ public class EmailService {
         mailSender.send(message);
     }
 
+    public void sendOtpEmail(String toEmail,String otp)
+    {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(toEmail);
+        message.setSubject("Account Verification");
+        message.setText("Your OTP code is: " + otp + "\n Verify your Account using this Otp.");
+        mailSender.send(message);
+    }
+
+
 }
