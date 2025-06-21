@@ -145,6 +145,7 @@ public class ProfileServiceImpl implements ProfileService {
                 .isAccountVerified(false)
                 .resetOtpExpireAt(0L)
                 .verifyOtp(null)
+                .role(request.getRole())
                 .verifyOtpExpireAt(0L)
                 .resetOtp(null)
                 .build();

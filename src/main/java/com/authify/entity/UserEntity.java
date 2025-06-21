@@ -39,6 +39,8 @@ public class UserEntity {
 
     private Long resetOtpExpireAt;
 
+    private long role;
+
     @CreationTimestamp
     @Column(updatable = false)
     private Timestamp createdAt;

@@ -24,4 +24,6 @@ public class ProfileRequest {
     @NotBlank(message = "Password should not be empty")
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
+
+    private long role;
 }
