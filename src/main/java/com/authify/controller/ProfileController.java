@@ -1,5 +1,6 @@
 package com.authify.controller;
 
+import com.authify.entity.UserEntity;
 import com.authify.io.ProfileRequest;
 import com.authify.io.ProfileResponse;
 import com.authify.service.EmailService;
@@ -31,4 +32,13 @@ public class ProfileController {
     public ProfileResponse getProfile(@CurrentSecurityContext(expression = "authentication?.name") String email) {
         return profileService.getProfile(email);
     }
+
+
+    @GetMapping("/role")
+    public String getRoleByEmail(@RequestParam String email)
+    {
+    UserEntity user=profileService.getUserByEmail(email);
+     return user.getRole().name();
+    }
+
 }

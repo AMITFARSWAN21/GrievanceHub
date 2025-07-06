@@ -1,5 +1,6 @@
 package com.authify.service;
 
+import com.authify.entity.UserEntity;
 import com.authify.io.ProfileRequest;
 import com.authify.io.ProfileResponse;
 
@@ -16,6 +17,8 @@ public interface ProfileService {
     void sendOtp(String email);
 
     void verifyOtp(String email,String Otp);
+
+    UserEntity getUserByEmail(String email);
 
 
 }

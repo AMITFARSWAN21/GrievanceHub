@@ -1,6 +1,7 @@
 package com.authify.service;
 
 import com.authify.entity.UserEntity;
+import com.authify.entity.UserRole;
 import com.authify.io.ProfileRequest;
 import com.authify.io.ProfileResponse;
 import com.authify.repository.UserRepository;
@@ -126,6 +127,13 @@ public class ProfileServiceImpl implements ProfileService {
 
     }
 
+    @Override
+    public UserEntity getUserByEmail(String email) {
+       return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found" + email));
+
+    }
+
 
     private ProfileResponse convertToProfileResponse(UserEntity newProfile) {
         return ProfileResponse.builder()
@@ -145,7 +153,7 @@ public class ProfileServiceImpl implements ProfileService {
                 .isAccountVerified(false)
                 .resetOtpExpireAt(0L)
                 .verifyOtp(null)
-                .role(request.getRole())
+                .role(request.getRole() != null ? request.getRole() : UserRole.USER)
                 .verifyOtpExpireAt(0L)
                 .resetOtp(null)
                 .build();

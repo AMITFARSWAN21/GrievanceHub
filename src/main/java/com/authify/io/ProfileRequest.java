@@ -1,5 +1,6 @@
 package com.authify.io;
 
+import com.authify.entity.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,5 +26,5 @@ public class ProfileRequest {
     @Size(min = 6, message = "Password must be at least 6 characters")
     private String password;
 
-    private long role;
+    private UserRole role;
 }
