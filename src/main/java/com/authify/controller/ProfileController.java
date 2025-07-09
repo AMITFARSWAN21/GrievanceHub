@@ -8,8 +8,12 @@ import com.authify.service.ProfileServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1.0")
@@ -33,12 +37,13 @@ public class ProfileController {
         return profileService.getProfile(email);
     }
 
-
     @GetMapping("/role")
-    public String getRoleByEmail(@RequestParam String email)
-    {
-    UserEntity user=profileService.getUserByEmail(email);
-     return user.getRole().name();
+    public ResponseEntity<Map<String, String>> getRoleByEmail(@RequestParam String email) {
+        UserEntity user = profileService.getUserByEmail(email);
+        Map<String, String> response = new HashMap<>();
+        response.put("role", user.getRole().name());
+        return ResponseEntity.ok(response);
     }
+
 
 }

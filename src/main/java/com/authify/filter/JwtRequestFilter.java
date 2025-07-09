@@ -26,13 +26,15 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private final JwtUtil jwtUtil;
 
     // ✅ Full exact paths of public endpoints
-    private static final List<String> PUBLIC_URLS = List.of(
+    private static final List<String> PUBLIC_URL_PREFIXES = List.of(
             "/api/v1.0/login",
             "/api/v1.0/register",
             "/api/v1.0/send-reset-otp",
             "/api/v1.0/reset-password",
-            "/api/v1.0/logout"
+            "/api/v1.0/logout",
+            "/api/v1.0/complaint"  // ✅ allow everything under /complaint
     );
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -44,11 +46,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         System.out.println("Request URI: " + path);
 
         // ✅ Skip JWT filter for public endpoints
-        if (PUBLIC_URLS.contains(path)) {
+        boolean isPublic = PUBLIC_URL_PREFIXES.stream().anyMatch(path::startsWith);
+        if (isPublic) {
             System.out.println("Public URL hit. Skipping JWT validation.");
             filterChain.doFilter(request, response);
             return;
         }
+
 
         String jwt = null;
         String email = null;
