@@ -3,12 +3,15 @@ package com.authify.service;
 import com.authify.entity.Complaint;
 import com.authify.entity.ComplaintStatus;
 import com.authify.entity.PriorityLevel;
+import com.authify.entity.UserEntity;
 import com.authify.io.ComplaintResponse;
 import com.authify.repository.ComplaintRepository;
+import com.authify.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.Base64;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import java.io.IOException;
@@ -20,6 +23,12 @@ public class ComplaintService {
 
     @Autowired
     private ComplaintRepository complaintRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     public Complaint saveComplaint(String name, String title, String description,
                                    String address, String locality,
@@ -67,9 +76,11 @@ public class ComplaintService {
                         : null)
                 .complaintStatus(complaint.getComplaintStatus())
                 .priorityLevel(complaint.getPriorityLevel())
+                .status(complaint.getComplaintStatus().name()) // ✅ this ensures frontend gets correct value
                 .build()
         ).collect(Collectors.toList());
     }
+
 
     public ComplaintResponse getComplaintStatus(Long id) {
         Complaint complaint = complaintRepository.findById(id)
@@ -89,6 +100,7 @@ public class ComplaintService {
                         : null)
                 .complaintStatus(complaint.getComplaintStatus())
                 .priorityLevel(complaint.getPriorityLevel())
+                .status(complaint.getComplaintStatus().name()) // ✅ add this line
                 .build();
     }
 
@@ -98,6 +110,22 @@ public class ComplaintService {
 
         complaint.setComplaintStatus(newStatus);
         complaintRepository.save(complaint);
+
+        if (newStatus == ComplaintStatus.RESOLVED) {
+            String name = complaint.getName();
+            List<UserEntity> users = userRepository.findAllByName(name); // ✅ updated method
+
+            if (!users.isEmpty()) {
+                String email = users.get(0).getEmail(); // you can customize logic here
+                if (email != null && !email.isEmpty()) {
+                    emailService.complaintIssueResolved(email, complaint.getTitle());
+                }
+            }
+        }
     }
+
+
+
+
 
 }
