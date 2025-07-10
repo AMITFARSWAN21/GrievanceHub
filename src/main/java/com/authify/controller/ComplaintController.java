@@ -53,20 +53,10 @@ public class ComplaintController {
     @PutMapping("/status/{id}")
     public ResponseEntity<String> updateComplaintStatus(
             @PathVariable Long id,
-            @RequestBody Map<String, String> requestBody) {
-
-        String statusStr = requestBody.get("status");
-
-        try {
-            ComplaintStatus newStatus = ComplaintStatus.valueOf(statusStr.toUpperCase());
-            complaintService.updateComplaintStatus(id, newStatus);
-            return ResponseEntity.ok("Complaint status updated to: " + newStatus);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body("Invalid status value: " + statusStr);
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+            @RequestBody Map<String, String> body) {
+        String status = body.get("status");
+        complaintService.updateComplaintStatus(id, ComplaintStatus.valueOf(status));
+        return ResponseEntity.ok("Status updated successfully");
     }
-
 
 }
