@@ -43,5 +43,15 @@ public class EmailService {
         mailSender.send(message);
     }
 
+    public void complaintIssueResolved(String toEmail,String complaintTitle)
+    {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(toEmail);
+        message.setSubject("Complaint Issue Resolved");
+        message.setText("Dear user,\n\nYour complaint titled \"" + complaintTitle + "\" has been marked as RESOLVED. Thank you for reporting!\n\nRegards,\nCommunity Support Team");
+        mailSender.send(message);
+    }
+
 
 }
