@@ -32,7 +32,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             "/api/v1.0/send-reset-otp",
             "/api/v1.0/reset-password",
             "/api/v1.0/logout",
-            "/api/v1.0/complaint"  // ✅ allow everything under /complaint
+            "/api/v1.0/resume"  // ✅ allow everything under /complaint
     );
 
 
